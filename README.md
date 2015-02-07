@@ -1,7 +1,7 @@
-# ci
+# My Codeigniter
 this my example of using codeigniter 2.2.0
 
-Database
+### Database
 
 CREATE TABLE news (
 	id int(11) NOT NULL AUTO_INCREMENT,
