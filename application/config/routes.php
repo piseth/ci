@@ -64,6 +64,7 @@ $route['default_controller'] = 'pages/view';
 
 //login routes
 $route['login'] = 'login/index';
+$route['verifylogin'] = 'verifylogin/index';
 $route['logout'] = 'login/logout';
 
 $route['404_override'] = '';

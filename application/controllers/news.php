@@ -1,4 +1,5 @@
-<?php
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+session_start(); //we need to call PHP's session object to access it through CI
 class News extends CI_Controller {
 
 	public function __construct()
@@ -7,6 +8,12 @@ class News extends CI_Controller {
 		$this->load->model('news_model');
 		$this->load->helper('url');
 		$this->load->library('pagination');
+		// check login
+		if(!$this->session->userdata('logged_in'))
+		{
+			//If no session, redirect to login page
+			redirect('login', 'refresh');
+		}
 	}
 
 	public function index()
@@ -15,7 +22,7 @@ class News extends CI_Controller {
 		$data['title'] = 'News List';
 
 		
-		
+		// pagination configuration
 		$config = array();
 		$config['base_url'] = 'http://localhost:82/ci/news';
 		$config['total_rows'] = $this->news_model->record_count();;
@@ -26,9 +33,19 @@ class News extends CI_Controller {
 		$data["news"] = $this->news_model->fetch_news($config["per_page"], $page);
         $data["links"] = $this->pagination->create_links();
 		
+
+		// load template with data
+		$session_data = $this->session->userdata('logged_in');
+		$data['username'] = $session_data['username'];
 		$this->load->view('templates/header', $data);
 		$this->load->view('news/index', $data);
 		$this->load->view('templates/footer');
+
+		
+		// load template with data
+		// $this->load->view('templates/header', $data);
+		// $this->load->view('news/index', $data);
+		// $this->load->view('templates/footer');
 		
 		
 	}

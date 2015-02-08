@@ -20,3 +20,5 @@
 <?php endforeach ?>
 </table>
 <p><?php echo $links; ?></p>
+<h2>Welcome <?php echo $username; ?>!</h2>
+<a href="<?php echo base_url()?>logout">Logout</a>
