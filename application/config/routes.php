@@ -67,6 +67,11 @@ $route['login'] = 'login/index';
 $route['login/verify'] = 'login/verify';
 $route['logout'] = 'login/logout';
 
+
+// upload
+$route['uploadclass'] = 'uploadclass';
+$route['uploadclass/uploadfile'] = 'uploadclass/uploadfile';
+
 $route['404_override'] = '';
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
