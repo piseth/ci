@@ -33,7 +33,7 @@ class News extends CI_Controller {
 		$this->pagination->initialize($config);
 		$page = ($this->uri->segment(2)) ? $this->uri->segment(2) : 0;
 		$data["news"] = $this->news_model->fetch_news($config["per_page"], $page);
-        $data["links"] = $this->pagination->create_links();
+		$data["links"] = $this->pagination->create_links();
 		
 
 		// load template with data
@@ -53,17 +53,17 @@ class News extends CI_Controller {
 	}
 
 	public function show($id){
-        $data['news_item'] = $this->news_model->get_news($id);
+		$data['news_item'] = $this->news_model->get_news($id);
 		//print_r($data);die();
-        if (empty($data['news_item'])){
-            show_404();
-        }
-        $data['title'] = $data['news_item']['title'];
+		if (empty($data['news_item'])){
+			show_404();
+		}
+		$data['title'] = $data['news_item']['title'];
 
-        $this->load->view('templates/header', $data);
-        $this->load->view('news/show', $data);
-        $this->load->view('templates/footer');
-    }
+		$this->load->view('templates/header', $data);
+		$this->load->view('news/show', $data);
+		$this->load->view('templates/footer');
+	}
 	public function create()
 	{
 		$this->load->helper('form');
@@ -84,17 +84,17 @@ class News extends CI_Controller {
 		}
 		else
 		{
-				// save image name into db
+			// save image name into db
 			$image = $this->myupload->upload('photo');
 			if ($image['error'] =='') {
-			
+				
 				$slug = url_title($this->input->post('title'), 'dash', TRUE);
 
 				$data = array(
-					'title' => $this->input->post('title'),
-					'slug' => $slug,
-					'text' => $this->input->post('text'),
-					'photo' => $image['file_name']
+				'title' => $this->input->post('title'),
+				'slug' => $slug,
+				'text' => $this->input->post('text'),
+				'photo' => $image['file_name']
 				);
 				
 				$this->news_model->add_news($data);
@@ -117,17 +117,59 @@ class News extends CI_Controller {
 		$this->load->helper('form');
 		$this->load->library('form_validation');
 		
-		
 		$result = $this->news_model->edit($id);
 		if($result){
 			$data['news'] = $result;
+			$data['error'] = '';
 			$this->load->view('news/edit',$data);
 		}
 	}
 	public function update(){
-	
-		$data = $this->input->post();
-		$result = $this->news_model->update($data);
-		redirect(base_url().'news');         
+		
+		$this->load->helper('form');
+		$this->load->library('form_validation');
+		
+		$this->form_validation->set_rules('title', 'Title', 'required');
+		$this->form_validation->set_rules('text', 'text', 'required');
+		$data['error'] = '';
+		if ($this->form_validation->run() === FALSE)
+		{
+			$id = $this->input->post('id');
+			$result = $this->news_model->edit($id);
+			if($result){
+				$data['news'] = $result;
+				$this->load->view('news/edit',$data);
+			}
+		}
+		else
+		{
+			// save image name into db
+			$image = $this->myupload->upload('photo');
+			if ($image['error'] =='') {
+				
+				$slug = url_title($this->input->post('title'), 'dash', TRUE);
+				$data = array(
+					'id' => $this->input->post('id'),
+					'title' => $this->input->post('title'),
+					'slug' => $slug,
+					'text' => $this->input->post('text'),
+					'photo' => $image['file_name']
+				);
+				
+				$result = $this->news_model->update($data);
+				redirect(base_url().'news');
+
+			} else {
+				
+				$id = $this->input->post('id');
+				$result = $this->news_model->edit($id);
+				if($result){
+					$data['news'] = $result;
+					$data['error'] = $image['error'];
+					$this->load->view('news/edit',$data);
+				}
+			}
+			
+		}
 	}
 }

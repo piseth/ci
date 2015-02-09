@@ -1,6 +1,7 @@
 <h2>Edit a news item</h2>
 
 <?php echo validation_errors(); ?>
+<?php echo $error; ?>
 
 <?php echo form_open_multipart('news/update') ?>
 	<input type='hidden' name='id' value="<?php echo $news['id']?>"/>
