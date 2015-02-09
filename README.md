@@ -8,6 +8,7 @@ CREATE TABLE news (
 	title varchar(128) NOT NULL,
 	slug varchar(128) NOT NULL,
 	text text NOT NULL,
+	photo varchar(128) NULL,
 	PRIMARY KEY (id),
 	KEY slug (slug)
 );

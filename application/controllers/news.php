@@ -8,6 +8,8 @@ class News extends CI_Controller {
 		$this->load->model('news_model');
 		$this->load->helper('url');
 		$this->load->library('pagination');
+		$this->load->library('myupload');
+		
 		// check login
 		if(!$this->session->userdata('logged_in'))
 		{
@@ -68,6 +70,7 @@ class News extends CI_Controller {
 		$this->load->library('form_validation');
 
 		$data['title'] = 'Create a news item';
+		$data['error'] = '';
 
 		$this->form_validation->set_rules('title', 'Title', 'required');
 		$this->form_validation->set_rules('text', 'text', 'required');
@@ -81,8 +84,29 @@ class News extends CI_Controller {
 		}
 		else
 		{
-			$this->news_model->add_news();
-			redirect(base_url().'news/');
+				// save image name into db
+			$image = $this->myupload->upload('photo');
+			if ($image['error'] =='') {
+			
+				$slug = url_title($this->input->post('title'), 'dash', TRUE);
+
+				$data = array(
+					'title' => $this->input->post('title'),
+					'slug' => $slug,
+					'text' => $this->input->post('text'),
+					'photo' => $image['file_name']
+				);
+				
+				$this->news_model->add_news($data);
+				redirect(base_url().'news/');
+
+			} else {
+
+				$data['error'] = $image['error'];
+				$this->load->view('templates/header', $data);
+				$this->load->view('news/create', $data);
+				$this->load->view('templates/footer');
+			}
 		}
 	}
 	public function delete($id) {
@@ -101,6 +125,7 @@ class News extends CI_Controller {
 		}
 	}
 	public function update(){
+	
 		$data = $this->input->post();
 		$result = $this->news_model->update($data);
 		redirect(base_url().'news');         

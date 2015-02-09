@@ -4,6 +4,7 @@
   <tr>
     <th>title</th>
     <th>text</th>
+	<th>photo</th>
 	<th>show</th>
 	<th>edit</th>
 	<th>delete</th>
@@ -13,6 +14,11 @@
   <tr>
     <td><?php echo $news_item['title'] ?></td>
     <td><?php echo $news_item['text'] ?></td>
+	<td>
+	<?php if($news_item['photo']) : ?>
+		<img width="200" src="<?php echo base_url()?>uploads/<?php echo $news_item['photo']?>" alt="<?php echo $news_item['title'] ?>" />
+	<?php endif; ?>
+	</td>
 	<td><?php echo anchor('news/show/'.$news_item['id'] , 'show'); ?></td>
     <td><a href="<?php echo base_url()?>news/edit/<?php echo $news_item['id'] ?>">edit</a></td>
 	<td><a href="<?php echo base_url()?>news/delete/<?php echo $news_item['id'] ?>">delete</a></td>
