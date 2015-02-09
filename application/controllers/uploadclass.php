@@ -6,6 +6,7 @@ class Uploadclass extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->helper(array('form', 'url'));
+		$this->load->library('myupload');
 	}
 
 	public function index()
@@ -15,7 +16,7 @@ class Uploadclass extends CI_Controller {
 
 	public function uploadFile()
 	{
-		$config['upload_path'] = './uploads/';
+		/*$config['upload_path'] = './uploads/';
 		$config['allowed_types'] = 'gif|jpg|png';
 		$config['max_size']	= '1000';
 		$config['max_width']  = '2500';
@@ -31,6 +32,15 @@ class Uploadclass extends CI_Controller {
 		else
 		{
 			$data = array('upload_data' => $this->upload->data());
+			$this->load->view('upload_success_view', $data);
+		}*/
+		
+		$image = $this->myupload->upload('photo');
+		if ($image['error'] !='') {
+			$error = array('error' => $image['error']);
+			$this->load->view('upload_view', $error);
+		} else {
+			$data = array('upload_data' => $image);
 			$this->load->view('upload_success_view', $data);
 		}
 	}
